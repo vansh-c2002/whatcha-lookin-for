@@ -1,16 +1,17 @@
 from pathlib import Path
 import subprocess
 
-def separate_stems(parent_folder):
-    for song_file in Path(parent_folder).glob("*.mp3"):
-        # y, sr = librosa.load(song_file)
-        # duration = librosa.get_duration(y=y, sr=sr)
-        
+def separate_stems(song_file):
+
         command = [
                 "demucs",
                 "-n", "htdemucs",
-                "-o", str(parent_folder), # maybe add a /trying or some subfolder here
+                "-o", str(song_file.parent), # maybe add a /trying or some subfolder here
                 str(song_file)
             ]
         
-        subprocess.run(command, check=True)
+        try:
+            subprocess.run(command, check=True)
+            print(f"Stems separated for: {song_file.name}")
+        except:
+            print(f"Error running Demucs on {song_file.name}")

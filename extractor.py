@@ -94,8 +94,15 @@ def detect_instrument_presence_song(song_folder):
 #     return results['piano'], results['drums'], results['bass'], results['others']
 
 def detect_basic_info(song_folder):
-    artist, title = os.path.basename(song_folder).split(" - ", 1)
-    sample, _ = librosa.load(Path(song_folder) / 'vocals.wav', sr=22050)
+    song_folder = Path(song_folder)
+    
+    try:
+        artist, title = song_folder.name.split(" - ", 1)
+    except ValueError:
+        artist, title = "Unknown Artist", song_folder.name
+
+    vocals_path = song_folder / 'vocals.wav'
+    sample, _ = librosa.load(vocals_path, sr=22050)
     duration = librosa.get_duration(y=sample, sr=22050)
 
     return title.strip(), artist.strip(), duration

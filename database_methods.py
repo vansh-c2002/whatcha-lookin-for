@@ -11,19 +11,25 @@ def create_tables(conn):
         vocals BOOLEAN,
         bass BOOLEAN,
         drums BOOLEAN,
-        others BOOLEAN
+        others BOOLEAN,
+        filename TEXT UNIQUE
     )
     ''')
     conn.commit()
 
-def insert_song(conn, title, artist, duration, vocals, bass, drums, others):
+def insert_song(conn, title, artist, duration, vocals, bass, drums, others, filename):
     cursor = conn.cursor()
     cursor.execute('''
-    INSERT INTO songs (title, artist, duration, vocals, bass, drums, others)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
-    ''', (title, artist, duration, vocals, bass, drums, others))
+    INSERT INTO songs (title, artist, duration, vocals, bass, drums, others, filename)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    ''', (title, artist, duration, vocals, bass, drums, others, filename))
     conn.commit()
     return cursor.lastrowid  # Returns the song_id
+
+def is_song_already_processed(conn, filename):
+    cursor = conn.cursor()
+    cursor.execute("SELECT 1 FROM songs WHERE filename = ?", (filename,))
+    return cursor.fetchone() is not None
 
 def fetch_all_songs(conn):
     cursor = conn.cursor()
