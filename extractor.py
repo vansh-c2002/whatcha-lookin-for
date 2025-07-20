@@ -4,14 +4,12 @@ import numpy as np
 from pathlib import Path
 
 def detect_instrument_presence_stem(stem_audio, sr=22050):
-    
-    """Simple energy-based detection"""
-    
+
     # Average loudness/energy
     mean_rms_energy = np.mean(librosa.feature.rms(y=stem_audio)[0])
     
     # Threshold (tune this!)
-    energy_threshold = 0.0001  # Adjust based on your data
+    energy_threshold = 0.01  # Adjust based on your data
     
     return 1 if mean_rms_energy > energy_threshold else 0
 

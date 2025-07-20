@@ -1,4 +1,13 @@
+import importlib
+import extractor
+import database_methods
+import separate_stems
 import sqlite3
+
+importlib.reload(extractor)
+importlib.reload(database_methods)
+importlib.reload(separate_stems)
+
 from pathlib import Path
 from extractor import detect_instrument_presence_song, detect_basic_info
 from database_methods import create_tables, insert_song, is_song_already_processed
