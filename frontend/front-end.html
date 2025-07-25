@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whatcha lookin' for?</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Use Inter for a more humanist, friendly feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f7f6f3; /* Soft, neutral background */
+            color: #22292f;      /* Dark gray text */
+        }
+        .soft-card {
+            border: 1px solid #ececec;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 2px 8px rgba(60,60,60,0.04);
+            transition: box-shadow 0.2s;
+        }
+        .soft-card:hover {
+            box-shadow: 0 4px 16px rgba(60,60,60,0.08);
+        }
+        .soft-btn {
+            background: #e0e7ef;
+            color: #2d3748;
+            border-radius: 9999px;
+            padding: 0.75rem 2rem;
+            font-weight: 500;
+            border: none;
+            transition: background 0.2s;
+        }
+        .soft-btn:hover {
+            background: #cbd5e1;
+        }
+        .header-link {
+            color: #4b5563;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .header-link:hover {
+            color: #2563eb;
+        }
+        .icon-muted {
+            color: #a0aec0;
+        }
+        textarea, input {
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            color: #22292f;
+        }
+        textarea:focus, input:focus {
+            border-color: #a7f3d0;
+            outline: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="py-5 px-4 sm:px-6 lg:px-8 bg-white shadow-sm">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fas text-2xl icon-muted"></i>
+                <h1 class="text-xl font-bold" style="color:#374151;">Whatcha lookin' for?</h1>
+            </div>
+            <div class="hidden md:flex space-x-6">
+                <a href="#" class="header-link">Home</a>
+                <a href="#" class="header-link">About</a>
+                <a href="#" class="header-link">Examples</a>
+                <a href="#" class="header-link">Contact</a>
+            </div>
+            <button class="md:hidden text-xl icon-muted">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="max-w-3xl mx-auto text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4" style="color:#374151;">Find Your Perfect Soundtrack</h2>
+            <p class="text-lg text-gray-500 mb-6">What do you feel like listening to?</p>
+            
+            <div class="soft-card p-6 shadow mb-8">
+                <div class="relative">
+                    <textarea id="promptInput" rows="3" class="w-full rounded-lg px-4 py-3 text-base" placeholder="e.g. 'Hip-hop songs with guitar' or 'Pop songs that don't have drums'"></textarea>
+                    <div class="absolute right-3 bottom-3 flex space-x-2">
+                        <button id="voiceInputBtn" class="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition">
+                            <i class="fas fa-microphone icon-muted"></i>
+                        </button>
+                        <button id="clearBtn" class="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition">
+                            <i class="fas fa-times icon-muted"></i>
+                        </button>
+                    </div>
+                </div>
+                <button id="submitBtn" class="mt-6 soft-btn">
+                    <i class="fas fa-search mr-2"></i> Find My Music
+                </button>
+            </div>
+            
+            <div class="flex flex-wrap justify-center gap-3">
+                <button class="example-prompt px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full text-sm transition">Rock songs with female vocals</button>
+                <button class="example-prompt px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full text-sm transition">Chill electronic without lyrics</button>
+                <button class="example-prompt px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full text-sm transition">Upbeat jazz for studying</button>
+                <button class="example-prompt px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full text-sm transition">90s hip-hop with piano</button>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="hidden max-w-2xl mx-auto text-center mb-12">
+            <div class="flex flex-col items-center">
+                <div class="w-12 h-12 mb-4 rounded-full bg-gray-200 flex items-center justify-center">
+                    <i class="fas fa-music text-gray-400 text-xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold mb-2" style="color:#374151;">Analyzing your request</h3>
+                <p class="text-gray-400 mb-4">Finding your perfect matches...</p>
+                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div class="bg-gray-400 h-2.5 rounded-full" style="width: 45%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsSection" class="hidden">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-xl font-bold" style="color:#374151;">Your Recommendations</h2>
+                <button id="newSearchBtn" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full text-sm transition flex items-center">
+                    <i class="fas fa-redo mr-2"></i> New Search
+                </button>
+            </div>
+            
+            <div id="resultsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Results will be dynamically inserted here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-6 px-4 sm:px-6 lg:px-8 bg-white border-t border-gray-200">
+        <div class="container mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center space-x-2 mb-4 md:mb-0">
+                    <i class="fas text-lg icon-muted"></i>
+                    <span class="font-bold text-gray-600">Whatcha lookin' for?</span>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="icon-muted hover:text-blue-400 transition"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="icon-muted hover:text-blue-400 transition"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="icon-muted hover:text-blue-400 transition"><i class="fab fa-github"></i></a>
+                    <a href="#" class="icon-muted hover:text-blue-400 transition"><i class="fab fa-discord"></i></a>
+                </div>
+            </div>
+            <div class="mt-6 text-center text-gray-400 text-sm">
+                <p>© 2023 Whatcha lookin' for? All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const promptInput = document.getElementById('promptInput');
+            const submitBtn = document.getElementById('submitBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const voiceInputBtn = document.getElementById('voiceInputBtn');
+            const loadingState = document.getElementById('loadingState');
+            const resultsSection = document.getElementById('resultsSection');
+            const resultsContainer = document.getElementById('resultsContainer');
+            const newSearchBtn = document.getElementById('newSearchBtn');
+            const examplePrompts = document.querySelectorAll('.example-prompt');
+            
+            // Example prompts click handler
+            examplePrompts.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    promptInput.value = this.textContent;
+                });
+            });
+            
+            // Clear button handler
+            clearBtn.addEventListener('click', function() {
+                promptInput.value = '';
+            });
+            
+            // Voice input button handler (simulated)
+            voiceInputBtn.addEventListener('click', function() {
+                if (!('webkitSpeechRecognition' in window)) {
+                    alert('Voice input is not supported in your browser. Try Chrome or Edge.');
+                    return;
+                }
+                
+                this.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
+                this.classList.add('bg-red-500');
+                
+                // Simulate voice recognition
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-microphone"></i>';
+                    this.classList.remove('bg-red-500');
+                    
+                    // For demo purposes, we'll just add a sample prompt
+                    promptInput.value = "Recommend me some relaxing piano music with rain sounds";
+                }, 2000);
+            });
+            
+            // New search button handler
+            newSearchBtn.addEventListener('click', function() {
+                resultsSection.classList.add('hidden');
+                promptInput.value = '';
+                promptInput.focus();
+            });
+            
+            // Submit button handler
+            submitBtn.addEventListener('click', async function() {
+                const prompt = promptInput.value.trim();
+                
+                if (!prompt) {
+                    alert('Please enter a music request');
+                    return;
+                }
+                
+                // Show loading state
+                loadingState.classList.remove('hidden');
+                
+                // Hide results if they were showing
+                resultsSection.classList.add('hidden');
+                
+                // Simulate API call with timeout
+                setTimeout(async () => {
+                    try {
+                        // In a real implementation, you would call your API here
+                        const response = await fetchYourAPI(prompt);
+                        
+                        // For demo purposes, we'll use mock data
+                        // const mockResponse = generateMockResponse(prompt);
+                        
+                        // Process the response
+                        displayResults(response);
+                        
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('There was an error processing your request. Please try again.');
+                    } finally {
+                        loadingState.classList.add('hidden');
+                    }
+                }, 2500);
+            });
+            
+            // Function to generate mock response for demo purposes
+            function generateMockResponse(prompt) {
+                const genres = ['Pop', 'Rock', 'Hip-Hop', 'Electronic', 'Jazz', 'Classical', 'R&B', 'Country'];
+                const moods = ['Energetic', 'Relaxing', 'Melancholic', 'Upbeat', 'Dreamy', 'Aggressive', 'Romantic'];
+                const instruments = ['guitar', 'piano', 'drums', 'bass', 'violin', 'synthesizer', 'saxophone'];
+                
+                // Extract some keywords from the prompt for the mock response
+                const promptLower = prompt.toLowerCase();
+                let matchedGenre = genres.find(g => promptLower.includes(g.toLowerCase())) || genres[Math.floor(Math.random() * genres.length)];
+                let matchedMood = moods.find(m => promptLower.includes(m.toLowerCase())) || moods[Math.floor(Math.random() * moods.length)];
+                
+                // Generate 6 mock recommendations
+                const recommendations = [];
+                for (let i = 0; i < 6; i++) {
+                    const randomInstrument = instruments[Math.floor(Math.random() * instruments.length)];
+                    const randomYear = 2000 + Math.floor(Math.random() * 23);
+                    
+                    recommendations.push({
+                        id: `track_${i}`,
+                        title: `${matchedMood} ${matchedGenre} Song`,
+                        artist: `Artist ${String.fromCharCode(65 + i)}`,
+                        album: `${matchedMood} ${matchedGenre} Vibes`,
+                        year: randomYear,
+                        duration: `${Math.floor(Math.random() * 3) + 2}:${Math.floor(Math.random() * 60).toString().padStart(2, '0')}`,
+                        features: [
+                            `No ${promptLower.includes('without') ? promptLower.split('without')[1].trim().split(' ')[0] : randomInstrument}`,
+                            `${matchedMood.toLowerCase()} vibe`,
+                            `${Math.random() > 0.5 ? 'With' : 'Without'} vocals`
+                        ].filter(Boolean),
+                        matchScore: Math.floor(Math.random() * 30) + 70,
+                        coverUrl: `https://source.unsplash.com/random/300x300/?music,${matchedGenre.toLowerCase()},${i}`
+                    });
+                }
+                
+                return {
+                    query: prompt,
+                    recommendations: recommendations,
+                    analysis: {
+                        detectedGenre: matchedGenre,
+                        detectedMood: matchedMood,
+                        primaryFeatures: promptLower.includes('without') ? 
+                            `Without ${promptLower.split('without')[1].trim().split(' ')[0]}` : 
+                            'Various features'
+                    }
+                };
+            }
+
+            function formatDuration(seconds) {
+                if (isNaN(seconds)) return '';
+                const mins = Math.floor(seconds / 60);
+                const secs = Math.round(seconds % 60);
+                return `${mins}:${secs.toString().padStart(2, '0')}`;
+            }
+            
+            // Function to display results
+            function displayResults(data) {
+                // Clear previous results
+                resultsContainer.innerHTML = '';
+                
+                // Create and append result cards
+                data.recommendations.forEach((track, index) => {
+                    const card = document.createElement('div');
+                    card.className = `soft-card animate__animated animate__fadeIn`;
+                    card.style.animationDelay = `${index * 0.1}s`;
+                    
+                    card.innerHTML = `
+                        <div class="relative">
+                            <img src="${track.coverUrl}" alt="${track.album}" class="w-full h-48 object-cover rounded-t-xl">
+                            <div class="absolute top-2 right-2 bg-white bg-opacity-80 px-2 py-1 rounded text-xs text-gray-500 border">${track.year}</div>
+                            <div class="absolute bottom-2 left-2 bg-gray-200 text-gray-700 text-xs font-bold px-2 py-1 rounded">${track.matchScore}% match</div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold text-lg mb-1 truncate" style="color:#374151;">${track.title}</h3>
+                            <p class="text-gray-500 text-sm mb-2">${track.artist} • ${track.album}</p>
+                            <div class="flex justify-between items-center text-xs text-gray-400 mb-3">
+                                <span>${formatDuration(track.duration)}</span>
+                                <div class="flex space-x-1">
+                                    <button class="p-1 text-gray-400 hover:text-blue-400">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                    <button class="p-1 text-gray-400 hover:text-blue-400">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                    <button class="p-1 text-gray-400 hover:text-blue-400">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-1">
+                                ${track.features.map(feat => `
+                                    <span class="bg-gray-100 text-xs px-2 py-1 rounded-full text-gray-600">${feat}</span>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                    
+                    resultsContainer.appendChild(card);
+                });
+                
+                // Show results section
+                resultsSection.classList.remove('hidden');
+                
+                // Scroll to results
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            // API Integration Function (placeholder - replace with your actual API call)
+            async function fetchYourAPI(prompt) {
+                const API_ENDPOINT = 'http://localhost:8000/query';
+
+                const response = await fetch(API_ENDPOINT, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ prompt })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API request failed with status ${response.status}`);
+                }
+
+                const data = await response.json();
+                // Transform backend response to match displayResults format
+                return {
+                    recommendations: (data.results || []).map((row, i) => ({
+                        id: `track_${i}`,
+                        title: row.title,
+                        artist: row.artist,
+                        album: 'album name', // You can add this if you want
+                        year: '2018',  // You can add this if you want
+                        duration: Number(row.duration),
+                        features: [],
+                        matchScore: 100,
+                        coverUrl: 'https://source.unsplash.com/random/300x300/?music'
+                    }))
+                };
+            }
+        });
+    </script>
+</body>
+</html>
