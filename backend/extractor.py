@@ -1,6 +1,7 @@
 import librosa
 import os
 import numpy as np
+import mutagen
 from pathlib import Path
 
 def detect_instrument_presence_stem(stem_audio, sr=22050):
@@ -104,3 +105,13 @@ def detect_basic_info(song_folder):
     duration = librosa.get_duration(y=sample, sr=22050)
 
     return title.strip(), artist.strip(), duration
+
+
+# Con - Website lists multiple genres per track, but metadata only takes one
+
+def detect_genre(file_path):
+    audio = mutagen.File(file_path)
+    if audio and 'TCON' in audio: # this is where the genre is
+        return audio['TCON'].text[0]
+    else:
+        return 'Unknown'
