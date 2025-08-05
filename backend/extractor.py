@@ -22,7 +22,7 @@ def detect_instrument_presence_song(song_folder):
         stem_name = audio_file.stem  
         stem_files[stem_name] = audio_file 
 
-    expected_stems = ['vocals', 'drums', 'bass', 'other']
+    expected_stems = ['vocals', 'drums', 'bass', 'piano', 'guitar', 'other']
     results = {}
     
     # Check each expected stem
@@ -43,7 +43,7 @@ def detect_instrument_presence_song(song_folder):
             print(f"  Warning: {stem_name}.wav not found")
             results[stem_name] = 0
     
-    return results['vocals'], results['drums'], results['bass'], results['other']
+    return int(results['vocals']), int(results['drums']), int(results['bass']), int(results['piano']), int(results['guitar']), int(results['other'])
 
 
 

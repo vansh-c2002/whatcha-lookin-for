@@ -1,11 +1,11 @@
 from pathlib import Path
 import subprocess
 
-def separate_stems(song_file):
+def separate_stems(song_file): # consider inputting track name, to show that in the terminal too
 
         command = [
                 "demucs",
-                "-n", "htdemucs",
+                "-n", "htdemucs_6s",
                 "-o", str(song_file.parent), # maybe add a /trying or some subfolder here
                 str(song_file)
             ]
