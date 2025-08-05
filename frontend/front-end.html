@@ -330,7 +330,10 @@
     </div>
 
     <script>
-        const API_BASE_URL = 'https://whatcha-lookin-for.onrender.com';
+        // Use environment-aware API URL
+        const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+            ? 'http://localhost:8000' 
+            : 'https://whatcha-lookin-for.onrender.com';
         
         const searchInput = document.getElementById('searchInput');
         const searchBtn = document.getElementById('searchBtn');
