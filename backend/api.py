@@ -21,7 +21,7 @@ app = FastAPI()
 # Enable CORS for all origins (for local dev)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://whatcha-lookin-for.vercel.app/",
+    allow_origins=["https://whatcha-lookin-for.vercel.app",
                     "http://localhost:3000", "*"  # i'm not sure this is the link!
                     ],  # In production, set this to your frontend's URL, MAJOR TODO
     allow_credentials=True,
