@@ -1,0 +1,9 @@
+{
+    "rewrites": [
+      {
+        "source": "/api/(.*)",
+        "destination": "https://whatcha-lookin-for-backend.onrender.com/api/$1"
+      }
+    ]
+  }
+  
