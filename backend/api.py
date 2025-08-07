@@ -5,13 +5,13 @@ import backend.database_methods
 from pydantic import BaseModel
 import sqlite3
 import os
-from . import prompt_to_sql
+import backend.prompt_to_sql
 
-importlib.reload(prompt_to_sql)
+importlib.reload(backend.prompt_to_sql)
 importlib.reload(backend.database_methods)
 
-from .prompt_to_sql import convert_user_prompt_to_sql_query, validate_sql_query
-from .database_methods import get_track_genres
+from backend.prompt_to_sql import convert_user_prompt_to_sql_query, validate_sql_query
+from backend.database_methods import get_track_genres
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -21,20 +21,15 @@ app = FastAPI()
 # Enable CORS for all origins (for local dev)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://whatcha-lookin-for.vercel.app",
-        "https://whatcha-lookin-for.onrender.com", 
-        "http://localhost:3000",
-        "http://localhost:8000",
-        "http://127.0.0.1:5500"  # For local development
-    ],
+    allow_origins=["https://whatcha-lookin-for.vercel.app/",
+                    "http://localhost:3000", "*"  # i'm not sure this is the link!
+                    ],  # In production, set this to your frontend's URL, MAJOR TODO
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Use environment variable for database path, fallback to local path
-DB_PATH = os.getenv('DATABASE_PATH', os.path.join(os.path.dirname(__file__), "song_database_trial.db"))
+DB_PATH = os.path.join(os.path.dirname(__file__), "song_database_trial.db")
 
 class QueryRequest(BaseModel):
     prompt: str
