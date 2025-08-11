@@ -55,7 +55,7 @@ def process_all_unprocessed_songs():
     ]
     conn.close()
 
-    print(f"\n🎧 Found {len(unprocessed)} unprocessed songs.")
+    print(f"\n Found {len(unprocessed)} unprocessed songs.")
 
     if not unprocessed:
         return
@@ -69,12 +69,12 @@ def process_all_unprocessed_songs():
             failed.append((file_name, str(e)))
 
     if failed:
-        print(f"\n❌ {len(failed)} tracks failed. Writing to failed_tracks.txt...")
+        print(f"\n {len(failed)} tracks failed. Writing to failed_tracks.txt...")
         with open("failed_tracks.txt", "w") as f:
             for name, err in failed:
                 f.write(f"{name}: {err}\n")
     else:
-        print("\n🎉 All tracks processed successfully!")
+        print("\n All tracks processed successfully!")
 
 if __name__ == "__main__":
     process_all_unprocessed_songs()

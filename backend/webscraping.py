@@ -29,12 +29,12 @@ create_tables(conn)
 # === SCRAPING START ===
 for genre_id in GENRE_IDS:
     url = f"{BASE_URL}?genre={genre_id}&sort=listens&pageSize=100"
-    print(f"\n🔍 Scraping genre ID {genre_id}...")
+    print(f"\n Scraping genre ID {genre_id}")
     try:
         res = requests.get(url, headers=HEADERS)
         res.raise_for_status()
     except Exception as e:
-        print(f"❌ Failed to load genre page {genre_id}: {e}")
+        print(f"Failed to load genre page {genre_id}: {e}")
         continue
 
     soup = BeautifulSoup(res.text, "html.parser")
@@ -48,7 +48,7 @@ for genre_id in GENRE_IDS:
         try:
             track_info = json.loads(raw_data)
         except Exception as e:
-            print("❌ JSON parse error:", e)
+            print("JSON parse error:", e)
             continue
 
         track_id = track_info.get("id")
@@ -58,6 +58,7 @@ for genre_id in GENRE_IDS:
         file_url = track_info.get("fileUrl")
         file_name = track_info.get("fileName")
         download_url = track_info.get("downloadUrl")
+
         # Find the hyperlink and then we're pretty much good to go!
 
         print(f"Processing {title}")
@@ -80,7 +81,7 @@ for genre_id in GENRE_IDS:
                 file_name, file_url, str(genre_id)
             ))
         except Exception as e:
-            print(f"❌ Failed to insert {file_name} into DB: {e}")
+            print(f"Failed to insert {file_name} into DB: {e}")
             continue
 
         # Insert genre mappings
@@ -105,4 +106,4 @@ for genre_id in GENRE_IDS:
                 continue
 
 conn.close()
-print("\n✅ Done scraping!")
+print("\n We're done scraping!")
