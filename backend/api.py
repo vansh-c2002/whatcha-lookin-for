@@ -48,7 +48,7 @@ async def query_songs(request: QueryRequest):
             results = cursor.fetchall()
             # Only return top 5
             results = results[:5]
-            # Return title, artist, album, and listeners (TODO: add duration later on)
+            # Return title, artist, album, and listeners (TODO: add duration and other info later on)
             response = []
             for row in results:
                 track_id = row[0]
