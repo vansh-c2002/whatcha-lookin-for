@@ -1,8 +1,9 @@
 # Whatcha lookin' for?
 
+[![Demo](https://img.shields.io/badge/Demo-Live%20Preview-brightgreen)](https://whatcha-lookin-for.vercel.app/)
 [![Conference](https://img.shields.io/badge/Accepted-LBD%20%40%20ISMIR%202025-blue)](https://ismir.net)
 [![Conference](https://img.shields.io/badge/Accepted-AI4Music%20%40%20NeurIPS%202025-green)](https://neurips.cc)
-[![Demo](https://img.shields.io/badge/Demo-Live%20Preview-brightgreen)](https://whatcha-lookin-for.vercel.app/)
+
 
 <img src="assets/screenshot.png" alt="App screenshot" width="1000">
 
